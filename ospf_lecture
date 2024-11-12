@@ -88,13 +88,70 @@ Huawei - 1
 Point-to-point 
 -HDLC
 -PPP
-
+- consist only of two devices connected by a point-to-point link.
+- routers automatically discover neighbors
+- default HelloInterval is 10s and DeadInterval is 40s
+- no DR/BDR election needed.
+- ospf packets are sent to multicast address 224.0.0.5/FF02::5
 
 Non-Broadcast Multi-Access
 -Asynchronus Transfer Mode (ATM)
 -Frame Relay
 -X.25
+-network that supports multiple devices but does not have broadcast capability
+-requires manual configuration of neighbors
+- default HelloInterval is 30s and DeadInterval is 120s
+- uses DR/BDR election the router with the highest RouterID. 
+- OSPF Packets are sent in unicast instead of multicast.
 
 Point-to-Multipoint
 - No network is point-to-multipoint by default. 
 - network can be manually configured to become a point-to-multipoint.
+- a method of configuration that allows ospf to operate as if the wouter were connected via a point-to-point links instead of NBMA
+- suitable for hub and spoke topology
+- automatically discovers neighbors
+- default HelloInterval is 30s and DeadInterval is 120s
+- No DR/BDR
+- Hello packets are sent to multicast address 224.0.0.5/FF02::5
+- DBD, LSR, LSU and LSAck packets are sent to the neighbors unicast address. 
+
+
+OSPF Neighbor States - is the state of a converstation being held with a neighboring router.
+
+DOWN 
+- the initial state of a neighbor. Indicates no recent information received from the neighbor,
+- Hello packets can still be sent to discover the neighbors
+
+START (ATTEMPT)
+- attempt state is only valid for neighbors attached to NBMA networks.
+- Indicates no recent information received from the neighbor. 
+- More concerted effort should be made eto contact the neighor.
+
+INiT 
+- a Hello packet has recently been seen from the neighbor.
+
+TWO-WAY
+- indicates that the router now has two-way communication with a neighbor by seeing its own RouterID in the list of known neighbors in the received Hello packet through HELLO PROTOCOL.
+- final state for neighbors between DROTHERS.
+
+(DR AND BDR ELECTION WILL HAPPEN AFTER THIS STATE IF REQUIRED)
+
+EXSTART
+- this is the  first step in creating an adjacency between the two neighboring routers. 
+- LSDB exchange
+- the goal of this step is to decide which router is the master and to decide the initial DD sequence number. Sequence number is used
+to make sure that the routers receive the latest and most recent information
+
+(NEIGHBOR CONVERSATIONS IN THIS STATE ARE CALLED ADJACENCIES WHICH MEANS NEGOTIATIONS ARE DONE)
+
+EXCHANGE
+-the router is describing its entire link state database by sending DBD packets to its neighbor
+
+
+LOADING
+- LRD packets are sent to the neighbor asking for the more recent LSAs that have been discovered but not yet received in the Exchange State. 
+
+FULL 
+-indicates that the neighbor is now fully adjacent and LSDB synchronization has completed.
+- final state for all adjacencies in the where network type does not use DR/BDR
+- also the final state for all adjacencies between DR/BDR and DROTHER where the network type uses DR/BDR.
