@@ -48,3 +48,53 @@ How OSPF Works
 1. Exhange Topology information with other neighbors as Link State Advertisements (LSAs).
 2. Creates topology map for the network know as Link State DAtabase (LSDB)
 3. Calculate and find out the best paths.
+
+
+OSPF Network Types - OSPF routing domain can be made up of various typees of network links.
+Different network Types have been introduced for optimizing OSPF's performance based on the physical media of each OSPF interface.
+
+Broadcast 
+- Ethernet
+-netowrk that supports multiple devices and broadcast or multicast packets sent by one device in the network can be received byt all or some of the other devices.
+-automatically discover ospf neighbors
+-default Hello interval is 10s default DeadInterval is 40s
+-Elects Designated Router and Backup Designated Router
+
+DR and BDR Function
+- to reduce the number of adjacencies 
+- to reduce the amount of routing protocol traffic and the size of the LSDB. 
+- without DR and BDR all routers will need to have adjacency with each other (full mesh). 
+- with DR and BDR all routers will form adjacency direct to DR and BDR only which serves as the central point for exchanging OSPF routing information between routers on the same segment.
+
+DR Election
+-highest priority value
+-highest router id if there is a tie on the Priority value
+ 
+BDR Election
+- the second highest Priority
+- the second highest router ID if there is a tie on a Priority.
+
+DROTHER
+- routers that are part of the ospf but did not win the DR/BDR Election
+- manually setting the priority value of a router to 0 will automatically not participate in the election and becomes DROTHER
+
+Default Priority value per Vendor
+Cisco IOS - 1
+Juniper - 128
+Mikrotik - 1 
+Huawei - 1
+
+
+Point-to-point 
+-HDLC
+-PPP
+
+
+Non-Broadcast Multi-Access
+-Asynchronus Transfer Mode (ATM)
+-Frame Relay
+-X.25
+
+Point-to-Multipoint
+- No network is point-to-multipoint by default. 
+- network can be manually configured to become a point-to-multipoint.
