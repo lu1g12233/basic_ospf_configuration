@@ -1,0 +1,50 @@
+OSPF - Open Shortest Path First, is a dynamic routing protocol widely used on the internet. 
+It is designed for TCP/IP internet environments and an Interior Gateway Protocol (IGP). 
+It is also based on link-state or SPF technology. 
+
+Features of OSPF
+-support authentication
+-utilizes IP multicast
+-responds quickly to topology changes
+-supports heirarchical routing
+-allows route summarization
+-support equal-cost multi-path
+
+OSPFv2 - designed for routing IPv4 networks. 
+-RFC2328
+-Supports simple authentication and MD5 authentication
+-Supports IPv4 only
+-Runs on IPv4 transport
+-Uses 7 types of LSAs
+
+LSA Types for OSPFv2
+1 - Router LSA
+2 - Network LSA
+3 - Network summary LSAs
+4 - ASBR Summary LSA
+5 - AS-External LSA
+6 - Grouping Membership LSA
+7 - NSSA External LSA
+
+OSPFv3 - initially routing IPv6 but can now be used for IPv4 routing of networks. 
+-RFC5340 - runs on IPv6 transport
+-Initially supports IPv6 but can now support routing for IPv4 and IPv6 in RFC5838
+-No built-in authetication and uses IPSec for authentication
+-Uses 9 Types of LSAs
+
+LSA Types for OSPFv3
+0x2001 - Router LSA
+0x2002 - Network LSA
+0x2003 - Intra-Area Prefix LSA
+0x2004 - Inter-Area Router LSA
+0x2005 - AS-External LSA
+0x2006 - Group Membership LSA
+0x2007 - Type-7 LSA
+0x2008 - Link LSA
+0x2009 - Intra-area Prefix LSA
+
+
+How OSPF Works
+1. Exhange Topology information with other neighbors as Link State Advertisements (LSAs).
+2. Creates topology map for the network know as Link State DAtabase (LSDB)
+3. Calculate and find out the best paths.
