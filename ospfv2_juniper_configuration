@@ -1,1 +1,46 @@
+JUNIPER JUNOS OS OSPFv2
 
+Router01
+configure
+configure
+edit interface ge-0/0/0
+set unit 0 family inet address  10.1.0.1/30
+exit
+edit interface ge-0/0/6
+set unit 0 family inet address 10.2.1.1/24
+exit
+edit interfaces lo0
+set unit 0 family inet address 10.0.0.1/32
+exit
+top set routing-options router-id 10.0.0.1
+top edit protocols ospf area 0.0.0.0
+set interface ge-0/0/0.0 metric 10
+set interface lo0.0 metric 10 passive
+set interface ge-0/0/6.0 metric 10 passive
+commit and-quit
+
+Router02
+configure
+edit interface ge-0/0/0
+set unit 0 family inet address  10.1.0.2/30
+exit
+edit interface ge-0/0/6
+set unit 0 family inet address 10.2.2.1/24
+exit
+edit interfaces lo0
+set unit 0 family inet address 10.0.0.2/32
+exit
+top set routing option router-id 10.0.0.2
+top edit protocols ospf area 0.0.0.0
+set interface ge-0/0/0.0 metric 10
+set interface lo0.0 metric 10 passive
+set interface ge-0/0/6.0 metric 10 passive
+
+
+Verify OSPF
+show ospf overview
+show ospf interface brief
+show ospf neighbor
+show route table inet.0
+show ospf database
+show ospf database router details
