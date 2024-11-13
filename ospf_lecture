@@ -216,3 +216,28 @@ OSPF Working Process
 - Will use the SPF Algorithm to check the best path based on the total COST to reach the destination.
 
 
+OSPF AREA ID
+- a logical grouping of contiguous networks and hosts to be group together. 
+- each area runs a separate copy of the basic Link-State routing Algorithm.
+- to restric the propagation of routes
+- ro reduce the amount of resource required by each router to maintain its LSDB.
+- 32 bit number that can be written in dotted decimal notation 0.0.0.X
+- all routers with the same area have the same topology table for the area they belong to.
+- routers connected to multiple areas have separate topology table for each area and it can also perfrom route summarization and filtering.
+
+Area 0 
+- is the BACKBONE AREA
+- responsible for distributing routing information between non-backbone areas.
+
+Other Areas
+- non-backbone area and must be connected to backbone Area0
+
+OSPF ROUTERS
+Internal Router
+- Router with all directly connected networks belonging to the same area.
+Area Border Router
+- A router that attaches to multiple areas.
+Backbone Router
+- Router that has an interface in the backbone area 
+Autonomus System Bounday Router
+- A router that exchanges routing information with routers belong to other Autonomous System or Non-OSPF router.
