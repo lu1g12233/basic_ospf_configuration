@@ -117,40 +117,29 @@ Point-to-Multipoint
 
 
 OSPF Neighbor States - is the state of a converstation being held with a neighboring router.
-
 DOWN 
 - the initial state of a neighbor. Indicates no recent information received from the neighbor,
 - Hello packets can still be sent to discover the neighbors
-
 START (ATTEMPT)
 - attempt state is only valid for neighbors attached to NBMA networks.
 - Indicates no recent information received from the neighbor. 
 - More concerted effort should be made eto contact the neighor.
-
 INiT 
 - a Hello packet has recently been seen from the neighbor.
-
 TWO-WAY
 - indicates that the router now has two-way communication with a neighbor by seeing its own RouterID in the list of known neighbors in the received Hello packet through HELLO PROTOCOL.
 - final state for neighbors between DROTHERS.
-
 (DR AND BDR ELECTION WILL HAPPEN AFTER THIS STATE IF REQUIRED)
-
 EXSTART
 - this is the  first step in creating an adjacency between the two neighboring routers. 
 - LSDB exchange
 - the goal of this step is to decide which router is the master and to decide the initial DD sequence number. Sequence number is used
 to make sure that the routers receive the latest and most recent information
-
 (NEIGHBOR CONVERSATIONS IN THIS STATE ARE CALLED ADJACENCIES WHICH MEANS NEGOTIATIONS ARE DONE)
-
 EXCHANGE
 -the router is describing its entire link state database by sending DBD packets to its neighbor
-
-
 LOADING
 - LRD packets are sent to the neighbor asking for the more recent LSAs that have been discovered but not yet received in the Exchange State. 
-
 FULL 
 -indicates that the neighbor is now fully adjacent and LSDB synchronization has completed.
 - final state for all adjacencies in the where network type does not use DR/BDR
@@ -171,7 +160,6 @@ INIT                       INIT
 - If Yes, they will EXCHANGE ROUTING INFORMATION.
 EXSTART                     EXSTART
 - Router will send empty DBD Packets where DD sequence, Initialize, More and Master Slave is set. 
-
 Master/Slave Negotiation - ensures reliable packet transmission
 Master
 -router with highest router ID
@@ -180,7 +168,6 @@ Master
 Slave
 -router with lower Router ID.
 -acknowledges the packet by sending a DBD packet with same DD sequence number
-
 EXCHANGE                 EXCHANGE
 - Router 1 will send a DBD packet to Router 2 to transmit LSA Summaries
 - Router 2 will send a BDB packet to Router 1 that contains the LSA Summaries.
@@ -192,8 +179,8 @@ LOADING                   LOADING
 FULL                      FULL
 - Router 1 acknowledges the LSU and further request for LSR 
 
-OSPF Working Process
 
+OSPF Working Process
 1. Say Hello
 - Routers configured with OSPF will send Hello Packets 
 - Hello Packet contains basic information such as
@@ -224,13 +211,12 @@ OSPF AREA ID
 - 32 bit number that can be written in dotted decimal notation 0.0.0.X
 - all routers with the same area have the same topology table for the area they belong to.
 - routers connected to multiple areas have separate topology table for each area and it can also perfrom route summarization and filtering.
-
 Area 0 
 - is the BACKBONE AREA
 - responsible for distributing routing information between non-backbone areas.
-
 Other Areas
 - non-backbone area and must be connected to backbone Area0
+
 
 OSPF ROUTERS
 Internal Router
