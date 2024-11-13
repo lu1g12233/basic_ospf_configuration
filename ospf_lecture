@@ -292,3 +292,51 @@ Single Area OSPF
 - OPSFv2 LSDBs are Type-1, Type-2 and Type-5 LSA, Type-7 LSA
 - OSPFv3 LSDBS are 0x2001, 0x2002, 0x2008, 0x2009, 0x4005, 0x2007
 
+Route Redistribution for OSPF
+- the process that routes learned from one routing protocol have been advertised to another routing protocol
+- may be necessary in some cases
+- multiple parts of the network are managed by individual administrators using different routing protocol
+- network integration due to company merger or acquisition
+- for OSPF, ASBR performs route-redistribution
+- redistributed routes are known as OSPF External routes
+
+Redistribution into OSPF
+-Redistribute Connected
+-Redistribute Static
+-Redistribute from BGP
+-Redristribute from RIP
+-Redistribute from EIGRP
+-Redistribute from IS-IS
+-Redistribute from another OSPF routing domain
+
+External Metric Types
+Type-1
+-route cost is the total cost to reach an external destination
+-path cost to ASBR is the sum of all outgoing interface costs on the path to ASBR
+-external cost is the metric of an external route advertise by ASBR
+-PREFERRED
+Type-2
+-route cost = external cost
+-default metric type
+-DEFAULT
+
+
+Multi-area OSPF
+- in the OSPF routing domain, there are more than one areas.
+- Backbone area 0 and other areas.
+
+Area Border Router 
+- connects other areas to the backbone area
+- atleast one ospf interface in the backbone area
+- one or more ospf interface in other area 
+- contains separate copy of LSDB for each attached areas
+
+Route Summarization
+-reduces LSA flooding and LSDB size
+-reducing the routing table size
+-improving CPU and memory utilization
+- can be configure on ABR sed for summarizeing inter-area 
+- can be configured on ASBR used for summarizing external routes when doing route redistribution
+
+
+
