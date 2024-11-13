@@ -293,7 +293,7 @@ Single Area OSPF
 - OSPFv3 LSDBS are 0x2001, 0x2002, 0x2008, 0x2009, 0x4005, 0x2007
 
 
-CISCO IOS CONFIGURATION
+CISCO IOS CONFIGURATION OSPFv2 
 
 Router01
 conf t
@@ -363,7 +363,7 @@ show ip ospf database network
 
 
 
-JUNIPER JUNOS OS 
+JUNIPER JUNOS OS OSPFv2
 
 Router01
 configure
@@ -407,3 +407,44 @@ show ospf neighbor
 show route table inet.0
 show ospf database
 show ospf database router details
+
+
+CISCO IOS CONFIGURATION OSPFv3
+
+Router01
+configure terminal
+ipv6 unicast-routing
+ipv6 router ospf 1
+router-id 10.0.0.1
+passive-interface loopback 0
+passive-interface Gi0/7
+interface gi0/1
+ipv6 ospf 1 area 0.0.0.0
+ipv6 ospf cost 10
+interface loopback 0 
+ipv6 ospf 1 area 0.0.0.0
+ipv6 ospf cost 10
+interface gi0/7
+ipv6 ospf 1 area 0.0.0.0
+ipv6 ospf cost 10
+
+
+Router02
+configure terminal
+ipv6 unicast-routing
+ipv6 router ospf 1
+router-id 10.0.0.2
+passive-interface loopback 0
+passive-interface Gi0/7
+interface gi0/1
+ipv6 ospf 1 area 0.0.0.0
+ipv6 ospf cost 10
+interface loopback 0 
+ipv6 ospf 1 area 0.0.0.0
+ipv6 ospf cost 10
+interface gi0/7
+ipv6 ospf 1 area 0.0.0.0
+ipv6 ospf cost 10
+
+
+JUNIPER JUNOS OS OSPFv3
