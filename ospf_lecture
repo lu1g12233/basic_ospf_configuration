@@ -155,3 +155,64 @@ FULL
 -indicates that the neighbor is now fully adjacent and LSDB synchronization has completed.
 - final state for all adjacencies in the where network type does not use DR/BDR
 - also the final state for all adjacencies between DR/BDR and DROTHER where the network type uses DR/BDR.
+
+
+Bringing UP OSPF Adjacencies
+
+<<ROUTER01>>-------------<<ROUTER02>>
+
+- Router 1 wil send Hello Packet to Router 2 with no neighbor listed. neighbor = null
+DOWN                       DOWN
+- Router 2 will send Hello Packet to Router 1. Hello Packet neighbor = R1
+INIT                       INIT
+- DR/BDR Election will be performed if needed 
+- Routers will check if they will form adjacency. 
+- if NO, the will be stuck in 2-WAY STATE. 
+- If Yes, they will EXCHANGE ROUTING INFORMATION.
+EXSTART                     EXSTART
+- Router will send empty DBD Packets where DD sequence, Initialize, More and Master Slave is set. 
+
+Master/Slave Negotiation - ensures reliable packet transmission
+Master
+-router with highest router ID
+-defines the sequence number
+-increases the sequence number by 1 each time it sends a new DBD packet
+Slave
+-router with lower Router ID.
+-acknowledges the packet by sending a DBD packet with same DD sequence number
+
+EXCHANGE                 EXCHANGE
+- Router 1 will send a DBD packet to Router 2 to transmit LSA Summaries
+- Router 2 will send a BDB packet to Router 1 that contains the LSA Summaries.
+- Depending on the size of the DBD packet multiple transmission may occur
+- If Slave Router1 acknowledge that it has missed some recent LSA.
+LOADING                   LOADING
+- Router 1 will send LSR to Router to to request the missing LSAs
+- Router 2 will check if it's DBD is complete and will send the LSU to Router 1
+FULL                      FULL
+- Router 1 acknowledges the LSU and further request for LSR 
+
+OSPF Working Process
+
+1. Say Hello
+- Routers configured with OSPF will send Hello Packets 
+- Hello Packet contains basic information such as
+  - Router ID
+  - Area ID
+  - Hello and Dead Intervals
+  - OSPF Options
+  - Router Priority
+  - Known Neighbors
+2. Become Neigbors
+- OSPF version2 requires the same subnet mask
+- OSPF version3 requires the same instance ID
+3. Exchange topology information
+- LSDB synchronization
+- LSR, LSU, DBD packets will be exchanged
+- Each router in the OSPF will build its own LSDB. 
+4. Build Topology Map
+- Routers will calculate the cost going to every destination.
+5. Find the BEST PATH
+- Will use the SPF Algorithm to check the best path based on the total COST to reach the destination.
+
+
