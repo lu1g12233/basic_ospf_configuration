@@ -1,1 +1,36 @@
 JUNIPER JUNOS OS OSPFv3
+
+
+Router01
+configure
+top set routing-options router-id 10.0.0.1
+top edit protocol ospf3 area 0.0.0.0
+set interface ge-0/0/0.0 metric 10
+set interface ge-0/0/6.0 metric 10 passive
+set interface lo0.0 metric 10 passive
+commit and-quit
+
+
+Router02
+configure
+top set routing-options router-id 10.0.0.2
+top edit protocol ospf3 area 0.0.0.0
+set interface ge-0/0/0.0 metric 10
+set interface ge-0/0/6.0 metric 10 passive 
+set interface lo0.0 metric 10 passive
+commit and-quit
+
+
+
+
+
+
+show ospf3 overview
+show ospf3 interface brief
+show ospf3 neighbors
+show route table inet6.0
+show ospf3 database
+show ospf3 database router detail
+show ospf3 database netowrk detail
+show ospf3 database intra-area-prefix detail
+show ospf3 database link detail
