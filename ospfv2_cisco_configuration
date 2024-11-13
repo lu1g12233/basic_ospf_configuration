@@ -1,1 +1,71 @@
+CISCO IOS CONFIGURATION OSPFv2 
 
+Router01
+conf t
+int gi0/1
+description TO_Router2
+ip address 10.1.0.1 255.255.255.252
+no shutdown
+int g0/7
+description TO_Host1
+ip address 10.2.1.1 255.255.255.0
+no shutdown
+int loopback0
+no shutdown
+ip address 10.0.0.1 255.255.255.255
+exit
+router ospf 1
+router-id 10.0.0.1
+passive-interface loopback 0 
+passive-interface gi0/7
+exit
+interface gi0/1
+ip ospf 1 area 0.0.0.0
+ip ospf cost 10
+interface loopback 0 
+ip ospf 1 area 0.0.0.0
+ip ospf cost 10
+interface gi9/7
+ip ospf 1 area 0
+ip ospf cost 10
+
+Router02
+configure terminal 
+int gi0/1
+no shutdown
+description TO_Router01
+ip address 10.1.0.2 255.255.255.252
+int g0/7
+description TO_Host2
+no shutdown
+ip address 10.2.2.1 255.255.255.0
+int loopback 0
+no shutdown
+ip address 10.0.0.2 255.255.255.255
+exit
+router ospf 1
+router-id 10.0.0.2
+passive-interface loopback0
+passive-interface gi0/7
+exit
+interface gi0/1
+ip ospf 1 area 0.0.0.0
+ip ospf cost 10
+int gi0/7
+ip ospf 1 area 0.0.0.0
+ip ospf cost 10
+int lo0
+ip ospf 1 area 0.0.0.0
+ip ospf cost 10
+
+
+
+Verify OSPFv2
+
+show ip ospf 1
+show ip ospf interface brief
+show ip ospf neighbor
+show ip route
+show ip ospf database
+show ip ospf database router
+show ip ospf database network
