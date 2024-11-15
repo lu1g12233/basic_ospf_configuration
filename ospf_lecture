@@ -299,8 +299,9 @@ Route Redistribution for OSPF
 - network integration due to company merger or acquisition
 - for OSPF, ASBR performs route-redistribution
 - redistributed routes are known as OSPF External routes
+- represented by Represented by AS-External-LSA in LSDB
 
-Redistribution into OSPF
+Routes that can be redistributed to OSPF:
 -Redistribute Connected
 -Redistribute Static
 -Redistribute from BGP
@@ -309,7 +310,7 @@ Redistribution into OSPF
 -Redistribute from IS-IS
 -Redistribute from another OSPF routing domain
 
-External Metric Types
+External Metric Types:
 Type-1
 -route cost is the total cost to reach an external destination
 -path cost to ASBR is the sum of all outgoing interface costs on the path to ASBR
@@ -319,6 +320,20 @@ Type-2
 -route cost = external cost
 -default metric type
 -DEFAULT
+- external route can cost can be configured manually during redistribution.
+- if not confiugred manually it will use an external cost default value of 20. 
+
+Default Origination
+- default route is injected into OSPF.
+If Installed 
+- router will advertise the default route only when there is a default route int the routing table
+- router will advertise the default route anyway, even if there is no default route in the routing table
+- appears as external route to OSPF.
+
+Route Filtering
+- any new routes from the same source protocol will be automatically redistributed and unwanted routes can be accidentally advertised.
+- for Cisco and Mikrotik, all routes from particular source protocol will be included and is recommended to use filters.
+- for Juniper, requires export policy and filters must be implemented in the same policy.
 
 
 Multi-area OSPF
