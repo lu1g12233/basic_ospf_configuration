@@ -1,0 +1,66 @@
+OSPFv2 Default Route Cisco IOS
+
+Router01
+
+configuration terminal
+ip route 0.0.0.0 0.0.0.0 172.20.0.1
+router ospf 1
+default-information originate metric-type 1
+
+Router02
+
+configuration terminal 0.0.0.0 0.0.0.0 172.28.0.1
+router ospf 1
+default-information originate metric-type 
+
+
+Router 03
+
+show ip ospf database 
+show ip ospf database external 0.0.0.0 adv-route 10.0.0.1
+show ip ospf database external 0.0.0.0 adv-router 10.0.0.2
+show ip route ospf
+
+
+Router04
+show ip ospf database
+show ip ospf database external 0.0.0.0 adv-router 10.0.0.1
+show ip ospf database external 0.0.0.0 adv-router 10.0.0.2
+show ip route ospf 
+
+OSPFv2 Default Route Juniper JunOS
+
+Router01
+configure
+top set routing-options static route 0.0.0.0/0 next-hop 172.20.0.1
+top edit policy-options policy-statement OSPFV2-DEFAULT-ORIGINATE
+set term 10 from route-filter 0.0.0.0/0 exact
+set term 10 then external type 1
+set term 10 then accept
+top set protocols ospf export OSPFV2-DEFAULT-ORIGINATE
+commit and-quit
+
+Router02
+confiugre
+top set routing-options static-route 0.0.0.0/0 next-hop 172.28.0.1
+top edit policy-options policy-statement OSPFV2-DEFAULT-ORIGINATE
+set term 10 from route-filter 0.0.0.0/0 exact
+set term 10 then external type 1
+set term 10 then accept
+top set protocols ospf exaport OSPFV2-DEFAULT-ORIGINATE
+commit and-quit
+
+Router03
+show ospf database 
+show ospf database detail external lsa-id 0.0.0.0 advertising-router 10.0.0.1
+show ospf database detail external lsa-id 0.0.0.0 advertising-router 10.0.0.2
+show route table inet.0 protocol ospf
+
+Router04
+show ospf database 
+show ospf database detail external lsa-id 0.0.0.0 advertising-router 10.0.0.1
+show ospf database detail external lsa-id 0.0.0.0 advertising-router 10.0.0.2
+show route table inet.0 protocol ospf
+
+
+
