@@ -1,0 +1,62 @@
+OSPFv3 Route Filtering Cisco IOS
+
+Router04
+configure terminal 
+ipv6 prefix-list OSPFV3-REDIS-CONNECTED seq 10 permit 2001:db8:1:8::/127
+ipv6 prefix-list OSPFV3-REDIS-CONNECTED seq 20 permit 2001:db8:2:4::2/128
+ipv6 prefix-list OSPFV3-REDI-CONNECTED seq 30 permit 2001:db8:2:4::4/128
+route-map OSPFV3-REDIS-CONNECTED  permit 10
+match ipv6 address prefix-list OSPFV#-REDIS-CONNECTED
+ipv6 router ospf 1
+redistribute connected metric-type  1 route-map OSPFV3-REDIS-CONNECTED
+
+Router03
+show ipv6 ospf database
+show ipv6 ospf database external 2001:db8:1:8::/127 adv-router 10.0.0.1
+show ipv6 ospf database external 2001:db8:2:4::2/128 adv-router 10.0.0.1
+show ipv6 ospf database external 2001:db8:2:4::4/128 adv-router 10.0.0.1
+show ipv6 route ospf
+ping 2001:db8:1:8::1 source 2001:db8::3
+ping 2201:db8:2:4::4 source 2001:db8::3
+ping 2001:db8:2:4::4/128 source 2001:db8::3
+
+
+OSPFv3 Route Filtering Juniper JunOS
+
+Router04
+configure
+top edit policy-options policy-statement OSPFV3-REDIS-CONNECTED
+set term 10 from protocol direct
+set term 10 from 10 from route-filter 2001db8:1:8::/127 exact
+set term 10 then external type 1
+set term 10 then accept
+set term 20 from protocol direct
+set term 20 from route-filter 2001:db8:2:4:2/128 exact
+set term 20 then external type 1
+set term 20 then accept
+set term 30 from protocol direct
+set term 30 from route-filter 2001:db8:2:4::41/128 exact
+set term 30 then external type 1
+set term 30 then accept
+set term 1000 protocol direct
+set term 1000 then reject
+commit and-quit
+
+Router03
+show ospf3 database 
+show sopf3 database detail external 
+show route table inet6.0 protocol ospf
+ping 2001db8:1:8::1 source 2001:db8::3 count 5
+ping 2001:db8:2:4::2 source 2001:db8::3 count 5
+ping 2001:db8:2:4::41 source 2001:db8::3 count 5
+
+
+
+
+
+
+
+
+
+
+
