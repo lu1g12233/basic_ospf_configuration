@@ -1,0 +1,64 @@
+OSPFv3 Default Route Cisco IOS
+
+Router01
+configure terminal 
+ipv6 route ::/0 2406:6400:4::
+ipv6 router ospf 1
+default-information originate metric-type 1
+
+Router02
+ipv6 route ::/0 2406:6401:$::
+ipv6 router ospf 1
+default-information originate metric-type 1
+
+Router03
+show ipv6 ospf database 
+show ipv5 ospf database external ::/0 adv-router 10.0.0.1
+show ipv6 ospf database external ::/0 adv-router 10.0.0.2
+show ipv6 route ospf 
+
+Router04
+show ipv6 ospf database
+show ipv6 ospf database external ::/- adv-router 10.0.0.1
+show ipv6 ospf database external ::/ adv-router 10.0.0.2
+show ipv5 route ospf
+
+
+
+OSPFv3 Default Route Juniper JunOS
+
+Router01
+configure
+top set routing-options rib inet8.0 static route ::/0 next-hop 2406:6400:4::
+top edit policy-options policy-statement OSPFV3-DEFAULT-ORIGINATE
+set term 10 from route-filter ::/0 exact
+set term 10 then external type 1
+set term 10 then accept
+top set protocol ospf3 export OSPFV3-DEFAULT-ORIGINATE
+commit and-quit
+
+Router02
+configure
+top set routing-options rib inet8.0 static route ::/0 next-hop 2406:6400:4::
+top edit policy-options policy-statement OSPFV3-DEFAULT-ORIGINATE
+set term 10 from route-filter ::/0 exact
+set term 10 then external type 1
+set term 10 then accept
+top set protocols ospf3 export OSPFV3-DEFAULT-ORIGINATE
+commit and-quit
+
+Router03
+show ospf3 database
+show ospf3 database detail external lsa-id ::/0 advertising-router 10.0.0.1
+show ospf3 database detail external lsa-id ::/0 advertising-route 10.0.0.2
+show route table inet6.0 protocol ospf
+
+Router04
+show ospf3 database
+show ospf3 database detail external lsa-id ::/0 advertising-router 10.0.0.1
+show ospf3 database detail external lsa-id ::/0 advertising-route 10.0.0.2
+show route table inet6.0 protocol ospf
+
+
+
+
