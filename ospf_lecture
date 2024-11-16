@@ -263,13 +263,13 @@ LSA Types for OSPFv3
 - same function with Type3 LSA for OSPFv2
 0x2004 - Inter-Area Router LSA - SINGLE AREA
 - same function for type4 LSA for OSPFv2
-0x2005 - AS-External LSA - AS ROUTING DOMAIN
+0x4005 - AS-External LSA - AS ROUTING DOMAIN
 - same function for Type-5 LSA for OSPFv2
 0x2006 - Group Membership LSA - SINGLE AREA
 - depreciated in OSPF v3
 0x2007 - Type-7 LSA - SINGLE AREA
 - same function for Type-7 LSa for OSPFv2
-0x2008 - Link LSA - LINK LOCAL
+0x0008 - Link LSA - LINK LOCAL
 - new LSA carries information for direct neighbors
 - orginate by each router
 - provides information about link-local address and list of IPv6 address on the link
@@ -353,5 +353,88 @@ Route Summarization
 - can be configure on ABR sed for summarizeing inter-area 
 - can be configured on ASBR used for summarizing external routes when doing route redistribution
 
+OSPF Area Types for Multi-Area OSPF
+Backbone Area
+- area 0.0.0.0 or area 0
+- does not have resttrictions on the types of LSAs
+- central point for LSA propagation between other non-Backbone area
+- must be contiguous
 
+Standard Area
+- is the default area type for non-backbone area. 
+- allows the LSAs from the backbone area.
+- must be directly connected to the backbone area.
+
+LSA Types in Standard Area (OSPFv2)
+-router lsa
+-network lsa
+-network-summary lsa 
+-as-external lsa
+-asbr summary lsa
+
+LSA Types in Standard Area (OSPFv3)
+-router lsa
+-etwork lsa
+-intra-area-prefix lsa
+-link lsa
+-as-external area
+-inter-area-router lsa
+
+Stub Area
+-an area in which the advertisements of an external routes are not allowed
+-as externals are not flooded into
+-routing to AS external destinations in these area is based on a per-area/default route only
+LSA Types in Stub Area (OSPFv2)
+-router lsa
+-network lsa
+-network summary lsa
+LSA Types in Stub Area (OSPFv3)
+-router lsa
+-network lsa
+-network summary lsa
+-intra-area-prefix lsa
+-link lsa
+Totally Stubby Area
+-is a stub area that does not allow Network-Summary LSA, except the default route injected by ABR
+-all traffic leaving the area will be routed via the defalt route.
+- is suitable for network with a single exit for any non-local traffic
+LSA Types in Totally Stubby Area (OSPFv2)
+-router lsa
+-network lsa
+-default route
+LSA Types in Totally Stubby Area (OSPFv3)
+-router lsa
+-network lsa
+-intra-area-prefix lsa
+-link lsa
+-dedault route
+Not-So-Stubby-Area
+-is a stub area that enables capaility of AS external routes in a limited fashion
+- external routes originated in this area are described by Type-7 LSA instead of Type-5 AS-External LSA. 
+-NSSA border router should originate a default route LSA into the NSSA.
+LSA Types in NSSA (OSPFv2)
+-router lsa
+-network lsa
+-network summary lsa
+-default route
+LSA Types in NSSA (OSPFv3)
+-router lsa
+-netowrk lsa
+-inter-area-prefix lsa
+-link lsa
+=inter-area prefix lsa
+-default route
+-NSSA lsa
+
+Virtual Link
+-the single backbone area 0 cannot be disconnected or some areas of the ospf domain will become unreachable
+-can be configured through non backbone areas to maintain connectivity of the backbone
+-serve to connect pysically separate components of the backbone
+-endpoints are ABR.
+-NOT RECOMMEDED IN OSPF DESIGN.
+
+Transit Area
+-an area that connects/inbetween backcone area 0 to another standard area using virtual link
+-must have full routing information of the ospf domain
+-cannot be any kind of stub areas.
 
