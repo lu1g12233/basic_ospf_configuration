@@ -1,185 +1,3 @@
-OSPFv2 Route Redistribution Cisco IOS
-
-Router03
-
-conf t 
-int loopback 0
-no shutdown
-ip address 10.0.0.3 255.255.255.255
-exit
-int gi0/6
-description TO_Router01
-ip address 10.1.0.6 255.255.255.252
-no shutdown
-exit
-router ospf 1
-router-id 10.0.0.3
-passive-interface loopback0
-exit
-interface gi0/6
-ip ospf 1 area 0.0.0.0
-ip ospf cost 10
-interface loopback 0
-ip ospf 1 area 0.0.0.0
-exit
-wr
-
-Router01
-
-conf t
-interfce loopback 0
-no shutdown
-ip address 10.0.0.1 255.255.255.255
-exit
-interface gi0/1
-description TO_Router02
-ip address 10.1.0.1 255.255.255.252
-no shutdown
-interface gi0/5
-description TO_Router03
-ip address 10.1.0.4 255.255.255.252
-no shutdown
-router ospf 1
-router-id 10.0.0.1
-passive-interface loopback 0
-exit
-int gi0/1
-ip ospf 1 area 0.0.0.0
-ip ospf cost 10
-int gi0/5
-ip ospf 1 area 0.0.0.0
-ip ospf cost 10
-interface loopback 0
-ip ospf 1 area 0.0.0.0 
-exit
-wr
-
-
-
-Router02
-
-configure terminal
-interface loopback 0
-ip address 10.0.0.2 255.255.255.255
-router ospf 1
-router-id 10.0.0.2
-passive-interface loopback 0
-int gi0/1
-no shutdown
-description TO_Router01
-ip address 10.1.0.2 255.255.255.252
-int gi0/3
-no shutdown
-description TO_Router04
-ip address 10.1.0.17 255.255.255.252
-exit
-int gi0/1
-ip ospf 1 area 0.0.0.0
-ip ospf cost 10
-int gi0/3
-ip ospf cost 10
-ip ospf 1 area 0.0.0.0
-exit
-wr
-
-
-Router04
-
-configure terminal
-interface loopback 0
-ip address 10.0.0.4 255.255.255.255
-router ospf 1
-router-id 10.0.0.4
-passive-interface loopback 0
-int gi0/2
-description TO_Router02
-no shutdown
-ip address 10.1.0.18 255.255.255.252
-ip ospf 1 area 0
-ip ospf cost 10
-exit
-interface gi0/4
-description TO_Router05
-ip address 10.1.0.33 255.255.255.252
-no shutdown
-end
-wr
-
-ip route 10.2.5.0 255.255.255.0 10.1.0.34
-
-router ospf 1
-redistribute connected subnet metric-type1 20
-redistribute static subnets
-
-Router05
-
-configure terminal
-interface gi0/2
-description TO_Router04
-ip address 10.1.0.34 255.255.255.252
-no shutdown
-interface gi0/1
-description TO_Host05
-ip address 10.2.5.1 255.255.255.0
-end
-wr
-
-ip route 0.0.0.0 0.0.0.0 10.1.0.33
-
-Host05
-ip 10.2.5.2 255.255.255.0 10.2.5.1
-
-
-
-
-
-sh ip ospf database 
-show ip ospf database external 10.1.0.32 adv-router 10.0.0.4
-
-
-
-
-
-OSPFv2 Route Redistribution Juniper JunOS
-
-
-
-Router04
-top set routing-options static route 10.2.5.0/24 next-hop 10.1.0.34
-top edit policy-options policy statement OSPFV2-REDIS-CONNECTED
-set term 10 from protocol direct
-set term 10 then external type 1
-set term 10 then accept
-top edit policy options policy-statement OSPFV2-REDIS-STATIC
-set term 10 from protocol static
-set term 10 then accept
-top set protocols ospf export [ OSPFV2-REDIS-CONNECTED OSPFV2-REDIS-STATIC ]
-commit and-quit
-
-
-
-Router05
-top set routing-options static route 0.0.0.0/0 next-hop 10.1.0.33
-commit and-quit
-
-
-
-Router03
-show ospf database
-show ospf database detail external lsa-id 10.1.0.32 advertising-router 10.0.0.4
-show ospf database detail external lsa-id 10.2.5.0 advertising-rouer 10.0.0.4
-show route table inet.0 protocol ospf
-ping 10.2.5.2 source 10.0.0.3 count 5
-traceroute 10.2.5.2 source 10.0.0.3
-
-
-
-
-
-
-
-
-
 OSPFv3 Route Redistribution Cisco IOS
 
 Router04
@@ -188,11 +6,8 @@ ipv6 router ospf 1
 redistribute connected metric-type 1
 redistribute static 
 
-
 Router05
 ipv6 route ::/0 2001:db8:1:8::
-
-
 
 Router03
 show ipv6 ospf database
@@ -202,10 +17,11 @@ ping 2001:db8:2:5::2 source 2001:db8::3
 traceroute 2001:db8:2:5::2 source 2001:db8::3
 
 
+
+
 OSPFv3 Route Redistribution Juniper JunOS
 
 Router04
-
 top set routing-options rib inet6.0 static route 2001:db8:2:5::/64 next-hop 2001:db8:1:8::1
 top edit policy-options policy-statement OSPFV3-REDIS-CONNECTED
 set term 10 from protocol direct
@@ -219,7 +35,6 @@ commit and-quit
 
 
 ROUTER05
-
 configure
 top set routing-options rib inet6.0 static route ::/0 next-hop 2001:db8:1:8::
 commit and-quit
