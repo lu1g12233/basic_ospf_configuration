@@ -1,0 +1,132 @@
+OSPFv2 Multi-Area (Cisco IOS)
+
+Router01
+configure terminal
+router ospf 1
+router-id 10.0.0.1
+passive-interface loopback0
+interface gi0/1
+ip ospf cost 10
+ip ospf 1 area 0.0.0.0
+interface gi0/2
+ip ospf cost 10
+ip ospf 1 area 0.0.0.1
+interface loopback0
+ip ospf cost 10
+ip ospf 1 area 0.0.0.0
+
+
+sh ip ospf interface bried
+show ip ospf neighbor
+show ip ospf database 
+show ip orute ospf
+
+Router02
+configure terminal
+router ospf 1
+router-id 10.0.0.2
+passive-interface loopback0
+interface gi0/1
+ip ospf cost 10
+ip ospf 1 area 0.0.0.0
+interface gi0/3
+ip ospf cost 10
+ip ospf 1 area 0.0.0.2
+interface loopback 0
+ip ospf cost 10
+ip ospf 1 area 0.0.0.0
+
+sh ip ospf interface bried
+show ip ospf neighbor
+show ip ospf database 
+show ip orute ospf
+
+Router03
+configure terminal
+router ospf 1
+router-id 10.0.0.3
+passive-interface loopback0
+itnerface gi0/1
+ip ospf cost 10
+ip ospf 1 area 0.0.0.1
+inetface loopback0
+ip ospf cost 10
+ip ospf 1 area 1
+
+sh ip ospf interface bried
+show ip ospf neighbor
+show ip ospf database 
+show ip orute ospf
+
+Router04
+configure terminal
+ip route 10.2.5.0 255.255.255.0 10.1.0.34
+router ospf 1
+router-id 10.0.0.4
+passive-interface loopback 0
+redistribute static subnets
+interface gi0/2
+ip ospf cost 10
+ip ospf 1 area 0.0.0.2
+interface  loopback 0
+ip ospf cost 10
+ip ospf 1 area 0.0.0.2
+
+sh ip ospf interface bried
+show ip ospf neighbor
+show ip ospf database 
+show ip orute ospf
+
+
+
+OSPFv2 Multi-Area (Juniper JunOS)
+
+Router01
+configure
+top set routing-options router-id 10.0.0.1
+top edit protocols ospf area 0
+set interface ge-0/0/0.0 metric 10
+set interface l0.0 metric 10 passive
+top edit protocols ospf area 0.0.0.1
+set interface ge-0/0/1.0 metric 10
+commit and-quit
+
+Router02
+configure
+top set routing-options router-id 10.0.0.2
+top edit protocols ospf area 0.0.0.0
+set interface ge-0/0/0.0 metric 10
+set interface lo0.0 metric 10 passive
+top edit protocols ospf area 0.0.0.3
+interface ge-0/0/2.0 metric 10
+commit and-quit
+
+Router03
+configure
+top set routing-options router-id 10.0.0.0
+top edit protocols ospf area 0.0.0.1
+set inertface ge-0/0/0.0 metric 10
+set interface lo0.0 metric 10 passive 
+commit and-quit
+
+Router04
+configure 
+top set routing-options static route 10.2.5.0/24 next-hop 10.1.0.34
+top set routing options router-id 10.0.0.4
+top edit protocols ospf arae 0.0.0.2
+set interfac ge-0/0/1.0 metric 10
+set interface lo0.0 metric 10 passive
+top edit policy-options policy-statement OSPFV2-REDIS-STATIC
+set term 10 from protocol static
+set term 10 then accept
+top set protocols ospf export OSPFV2-REDIS-STATIC
+commit and-quit
+
+
+show ospf interface brief
+show ospf neighbor
+show ospf database
+show route table inet.0 protocol ospf
+
+
+
