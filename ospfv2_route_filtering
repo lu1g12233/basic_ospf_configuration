@@ -1,0 +1,46 @@
+ospfv2 Route Filtering Cisco IOS
+
+Router04
+configure terminal
+ip prefix-list OSPFV2-REDIS-CONNECTED seq 10 permit 10.0.1.32/30
+ip prefix-list OSPFV2-REDIS-CONNECTED seq 10 permit 10.2.4.2/32
+ip prefix-list OSPFV2-REDIS-CONNECTED seq 10 permit 10.2.4.4/32
+route-map OSPFV2-REDIS_CONNECTED permit 10
+match ip address prefix-list OSPFV2-REDIS-CONNECTED
+router ospf 1
+redistribute connected subnets metric-type 1 route-map OSPFV2-REDIS-CONNECTED
+
+Router03
+show ip ospf database
+show ip ospf database external 10.1.0.32 adv-router 10.0.0.4
+show ip ospf database external 10.2.4.2 adv-router 10.0.0.4
+show ip ospf database external 10.2.4.4 adv-router 10.0.0.4
+show ip route ospf
+
+ospfv2 Route Filtering Juniper JunOS
+
+Router04
+top edit policy-options policy-statement OSPFV2-REDIS-CONNECTED
+set term 10 from protocol direct
+set term 10 from route-filter 10.1.0.32/30 exact
+set term 10 then external type 1
+set term 10 then accept
+set term 20 from protocol direct
+sett term 20 from route-filter 10.2.4.2/32 exact
+set term 20 then external type 1
+set term 10 then accept
+set term term 30 from route-filter 10.2.4.4/32 exact
+set term 30 then external type 1
+set term 30 then accept
+set term 1000 from protocol direct
+set term 1000 then reject
+commit and-quit
+
+Router03
+show ospf database
+show ospf database details external
+show route table inet.0 protocol ospf
+ping 10.1.0.34 source 10.0.0.3
+ping 10.2.4.2 source 10.0.0.3
+ping 10.2.3.3 source 10.0.0.4
+
