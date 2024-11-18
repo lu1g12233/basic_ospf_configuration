@@ -18,6 +18,7 @@ ipv6 ospf 1 area 0.0.0.0
 show ipv6 ospf interface brief
 show ipv6 ospf neighbor
 show ipv6 ospf database
+show ipv6 route ospf
 
 
 Router02
@@ -60,3 +61,58 @@ ipv6 ospf 1 area 0.0.0.2
 interface loopback 0
 ipv6 cost 10
 ipv6 ospf 1 area 0.0.0.2
+
+
+
+
+OSPFv3 Multi-Area Juniper JunOS
+
+Router01
+configure
+top set routing-options router-id 10.0.0.1
+top edit protocol ospf3 area 0.0..0.0
+set interface ge-0/0/0.0 metric 10
+set interface lo0.0 metric 10 passive
+top edit protocols ospf area 0.0.0.1
+set interface ge-0/0/1.0 metric 10
+commit and-quit
+
+show ospf3 interface brief
+show ospf3 neighbor
+show ospf3 database 
+show ospf3 database detail area 0.0.0.0
+show ospf3 database detail area 0.0.0.1
+
+
+Router02
+configure
+top set routing-options router-id 10.0.0.2
+top edit protocol ospf3 area 0.0.0.0
+set interface ge-0/0/0.0 metric 10
+set interface lo0.0 metric 10 passive
+top edit protocols ospf3 area 0.0.0.2
+set interfaqce ge-0/0/2.0 metric 10
+commit and-quit
+
+Router03
+configure
+top set routing-options router-ie 10.0.0.3
+top edit protocol ospf3 area 0.0.0.1
+set interface ge-0/0/0.0 metric 10
+set interface loopback0.0 metric 10 passive 
+commit and-quit
+
+Router04
+configure
+top set routing-options static route 2001:fdb8:2:5::/64 next-hop 2001:db8:1:8::1
+top set routing options router-id 10.0.0.4
+top edit protocols ospf3 area 0.0.0.2
+set interface ge-0/0/1.0 metric 10
+set interface loopback0.0 metric 10 passive
+top edit policy-options policy-statement OSPFV3-REDIS-STATIC
+set term 10 from protocol static
+set term 10 then accept
+top set protocols ospf 3 export OSPFV3-REDIS-STATIC
+commit and-quit
+
+
