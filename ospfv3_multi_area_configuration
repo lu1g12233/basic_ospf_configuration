@@ -1,0 +1,62 @@
+OSPFv3 Multi-Area Cisco IOS
+
+Router01
+configure terminal
+opv6 router ospf 1
+router-id 10.0.0.1
+passive-interface loopback 0
+interface gi0/1
+ipv6 ospf cost 10
+ipv6 ospf 1 area 0.0.0.0
+interface gi0/2
+ipv6 ospf cost 10
+ipv6 ospf 1 area 0.0.0.0
+interface loopback 0 
+ipv6 ospf cost 10
+ipv6 ospf 1 area 0.0.0.0
+
+show ipv6 ospf interface brief
+show ipv6 ospf neighbor
+show ipv6 ospf database
+
+
+Router02
+configure terminal
+ipv6 ospf 1
+router-id 10.0.0.2
+passive-interface loopback 0
+int gi0/1
+ipv6 ospf cost 10
+ipv6 ospf 1 aera 0.0.0.0
+interface g0/3
+ipv6 ospf cost 10
+ipv6 oapf 1 area 0.0.0.2
+interface loopback 0 
+ipv6 ospf cost 10
+ipv6 opspf 1 area 0.0.0.0
+
+Router03
+configure terminal 
+ipv6 ospf 1
+router-id 10.0.0.3
+passive-interface loopback 0
+interface gi0/1
+ipv6 ospf cost 10
+ipv6 ospf 1 area 0.0.0.1
+interface loopback 0 
+ipv6 ospf cost 10
+ipv6 ospf 1 area 0.0.0.1
+
+Router 04
+configuration terminal
+ipv6 route 2001:db8:2:5::/64 2001.:db8:1:8::1
+ipv6 router ospf 1
+router-id 10.0.0.4
+passive-interface loopback 0
+redistribute static 
+interface g0/2
+ipv6 ospf cost 10
+ipv6 ospf 1 area 0.0.0.2
+interface loopback 0
+ipv6 cost 10
+ipv6 ospf 1 area 0.0.0.2
