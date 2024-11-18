@@ -1,0 +1,104 @@
+OSPFV2 Authentication Cisco IOS
+
+Router01
+interface gi0/1
+ip ospf authentication message-digest
+ip ospf message-digest key 1 md5 Password
+ipv6 ospf authentication ipsec spi 1010201 sha1 0123456789ABCDEF
+interface gi0/2
+ip ospf message-digest
+ip ospf message-digest key 1 md5 Password
+ipv6 ospf authentication ipsec spi 1010301 sha1 0123456789ABCDEF
+
+Router02
+interface g0/1
+ip ospf authentication message-digest
+ip ospf message-digest key 1 md5 Password
+ipv6 ospf authentication ipsec spi 1010201 sha1 0123456789ABCEDF
+interface g0/3
+ip ospf authentication message-digest
+ip ospf message-digest key 1 md5 Password
+ipv6 ospf authentication ipsec spi 1010401 sha1 0123456789ABCDEF
+
+Router03
+interface g0/1
+ip ospf authentiaction message-digest
+ip ospf message-digest-key 1 md5 Password
+ipv6 ospf authentication ipsec spi 1010301 sha 1 0123456789ABCEDF
+
+Router04
+interface gi0/2
+ip ospf authentication message-digest
+ip ospf message-digest-key 1 md5 Password
+ipv6 ospf authentication ipsec spi1 1020401 sha1 0123456789ABCDEF
+
+
+OSPFV2 Authentication Cisco IOS
+
+Router01
+configure
+top edit protocols ospf area 0.0.0.0
+set interface ge-0/0/0.0 authentication md5 1 key Password
+set interface ge-0/0/1.0 authentication md5 1 key Password
+top edit security ipsec security-association OSPFV3-Auth
+set mode transport
+edit manual direction bidirectional
+set protocol ah
+set spi 256
+set authentication algorithm hmac-sha1-96
+set authentication key ascii-text Password
+top edit protocols ospf3 area 0.0.0.0
+set interface ge-0/0/0.0 ipsec-sa OSPFV3-AUTH
+set interface ge-0/0/1.0 ipsec-sa OSPFV3-AUTH
+
+Router02
+configure
+top edit protocols ospf area 0.0.0.0
+set interface ge-0/0/0.0 authentication md5 1 key Pssword
+set interface ge-0/0/2.0 authentication md5 1 key Password
+top edit security-association OSPFV3-AUTH
+set mode transport
+edit manual direction bidirectional
+set protocol ah
+set spi 256
+set authentication algorithm hmac-sha1-96
+set authentication key ascii-text Password
+top edit protocols ospf3 area 0.0.0.0
+set interfacee ge-0/0/0.0 ipsec-sa OSPFV3=AUTH
+set interface ge-0/0/2.0 ipsec-sa OSPFV3-AUTH
+
+Router03
+configure
+top edit protocols ospf area 0.0.0.0
+set interface ge-0/0/0.0 authentication md5 1 key Password
+top edit security-association OSPFV3-AUTH
+set mode transport
+edit manual direction bidirectional
+set protocol ah
+set spi 256
+set authentication algorithm hmac-sha-96
+set authentication key ascii-text Password
+top edit protocols ospf3 area 0.0.0.0
+set interface ge-0/0/0.0 ipsec-sa OSPV3-AUTH
+
+Router04
+configure
+top edit protocols ospf area 0.0.0.0
+set interface ge-0/0/1.0 authentication md5 1 key Password
+top edit security ipsec security association OSPFV3-ATUH
+set mode transport 
+set protocol ah
+set spi 256
+set authentication algorithm hmac-sha1-96
+set authentication ket ascii-tex Password
+top edit protocols ospf3 area 0.0.0.0
+set interface ge-0/0/1.0 ipsec-sa OSPFV3-AUTH
+
+
+
+
+
+
+
+
+
