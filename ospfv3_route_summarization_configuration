@@ -1,0 +1,82 @@
+OSPFV3 Route Summarization Cisco IOS
+
+Router04
+conf terminal
+ipv6 router ospf 1
+passive-interface loopback1
+passive-interface loopback2
+passive-interface loopback3
+passive-interface loopback4
+summary-prefix 2001:db8:3::/48
+interface loopback 1
+ipv6 ospf 1 area 0.0.0.2
+interface loopback 2
+ipv6 ospf 1 area 0.0.0.2
+interface loopback 3
+ipv6 ospf 1 aea 0.0.0.2
+interface loopback 4
+ipv6 ospf 1 area 0.0.0.2
+end
+wr
+
+
+Router02
+configure terminal
+ipv6 router ospf 1
+area 0.0.0.2 range 2001:fdb8:2:4::/64
+end
+wr
+
+
+Router01
+show ipv6 ospf database 
+show ipv6 route ospf
+
+Router03
+show ipv6 ospf database
+show ipv6 route ospf 
+
+
+
+
+OSPFV3 Route Summarization Juniper JunOS
+
+Router04
+top edit protocols ospf3 area 0.0.0.2
+set interface ge-0/0/4.1 passive
+set interface ge-0/0/4.2 passive 
+set interface ge-0/0/4.3 passive
+set interface ge-0/0/4.4 passive
+top set routing options rib inet6.0 aggregate route 2001:db8:3::/48
+top delete policy-options policy-tatement OSPFV#-REDS-STATIC
+set term 10 from protocol static
+set term 10 from route-filter 2001:db8:3::/48 longer
+ser term 10 then reject
+set term 20 from protocol aggregate 
+set term 20 from route-filter 2001:db8:3::/48 exact
+set term 20 then accept 
+set term 30 from protocol static
+set term 30 then accept
+commit and-quit
+
+Router02
+top edit protocols ospf3 area 0.0.0.2 area-range 2001:db8:2:4::/64
+commit and-quit
+
+
+Router01
+show ospf3 database
+show ospf3 database detail inter-area-prefix advertising router 10.0.0.2
+show ospf3 database detail external
+show route table inet6.0 protocol ospf
+
+Router03
+show ospf3 database
+show ospf3 database details inter-area-prefix advertising router 10.0.0.1
+show opsf database details external
+show route table inet6.0 protocol ospf
+
+
+
+
+
