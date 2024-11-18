@@ -438,3 +438,37 @@ Transit Area
 -must have full routing information of the ospf domain
 -cannot be any kind of stub areas.
 
+
+
+OSPF Authentication
+-by default do not require authentication for routers to form adjaencies
+-unauthorized routers could accidentally or maliciously participate in the ospf routing domain with basic configuration
+-it is recommended to enable authentication in production environment
+
+OSPPFv2 Authentication
+Null Authentication
+- no authentication
+Simple Password Authentication
+- uses clear-text password
+- visible on packet capture
+Cryptographic Authentication
+-share secret key is configure in all routers in ospf
+-MD5 is used to generate authentication hash share secret key with MD5 algorithm
+-HMAC, hash based authentication code
+
+
+OSPFv3 Authentication
+-does not have built in authentication method
+-removed from the OSPF protocol
+-uses native support of IPSEC in IPv6 to secure communication between ospf configuration
+-AH, ESP is used for authentication and confidentiality
+
+
+Implementatiing Authentication
+Interface authentication
+- is configured in the interface and applies to all ospf packets received by the interface
+Area Authentication
+- is configure in the spf area and applies to ospf packets received by all interfarqces i the ospf area. 
+
+
+
