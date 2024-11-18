@@ -1,0 +1,86 @@
+OSPFV2 Route Summarization Cisco IOS
+
+Router04
+configure terminal
+router ospf 1
+passive-interface loopback1
+passive-interface loopback2
+passive-interface loopback3
+passive-interface loopback4
+interface loopback1
+ip ospf cost 10 
+ip ospf 1 area 0.0.0.2
+interfeace loopback2
+ip ospf cost 10
+ip ospf 1 area 0.0.0.2
+interface loopback3
+ip ospf cost 10
+ip ospf 1 area 0.0.0.2
+interface loopback4
+ip ospf cost 10
+ip ospf 1 area 0.0.0.2
+end 
+wr
+
+
+Router02
+configure terminal
+router ospf 1
+area 0.0.0.2 range 10.2.4..0 255.255.255.0
+end
+wr
+
+Router01
+show ip ospf database
+sh ip route ospf 
+
+Router03
+show ip ospf database
+sh ip route ospf
+
+
+
+
+OSPFV2 Route Summarization Juniper JunOS
+
+
+Router04
+top edit protocols ospf area 0.0.0.2
+set interface ge-0/0/4.1 passive
+set interface ge-0/0/4.2 passive 
+set interface ge-0/0/4.3 passive
+set interface ge-0/0/4.4 passive
+top set routing-options policy-statement OSPFV2-REDIS-STATIC
+set term 10 from protocol static
+set term 10 from route-filter 10.3.0.0./22 longer
+set term 10 then reject
+set term 20 from protocol aggregate
+set term 20 from route-filter 10.3.0.0/22 exact
+set term 20 then accept
+set term 30 from protocol static
+set term 30 then accept
+
+Router02
+configure 
+top edit protocols ospf area 0.0.0.2 area range 10.2.4.0/24
+commit and-quit
+
+Router01
+show ospf database
+show ospf database detail lsa-id 10.2.4.0
+show ospf database detail lsa-id 10.2.4.255
+show ospf database detail lsa-id 10.3.3.255
+show route table inet.0 protocol ospf
+
+Router03
+show ospf database
+show ospf database detail lsa-id 10.2.4.0
+show ospf database detail lsa-id 10.2.4.255
+show ospf database detail lsa-id 10.3.3.255
+show route table inet.0 protocol ospf
+
+
+
+
+
+
